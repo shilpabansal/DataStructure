@@ -66,45 +66,22 @@ class BinarySearchTree<T> where T : Comparable {
                 if let right = node.right {
                     queue.enque(right)
                 }
+                if queue.isEmpty() {
+                    break
+                }
                 currentNode = queue.dequeue()
                 if let currentNode = currentNode {
                     printingStatement += " -> " + String(describing: currentNode)
-                }
-                
-                if queue.isEmpty() {
-                    break
                 }
             }
         }
         return printingStatement
     }
     
-    func breathFirstTraversalByRecusrion(node: Node<T>? = nil, result: inout String) {
-        if let root = root, node == nil {
-            result += " -> " + String(describing: root)
-        }
-        let tranversingNode = node == nil ? root : node
-        if let node = tranversingNode {
-            if let left = node.left {
-                result += " -> " + String(describing: left)
-            }
-            
-            if let right = node.right {
-                result += " -> " + String(describing: right)
-            }
-            
-            if let left = node.left {
-                breathFirstTraversalByRecusrion(node: left, result: &result)
-            }
-            if let right = node.right {
-                breathFirstTraversalByRecusrion(node: right, result: &result)
-            }
-        }
-    }
-    
     func depthFirstTravesal(node: Node<T>? = nil, result: inout String) {
         let tranversingNode = node == nil ? root : node
         if let node = tranversingNode {
+            result += " -> " + String(describing: node)
             if let left = node.left {
                 depthFirstTravesal(node: left, result: &result)
             }
@@ -112,7 +89,6 @@ class BinarySearchTree<T> where T : Comparable {
             if let right = node.right {
                 depthFirstTravesal(node: right, result: &result)
             }
-            result += " -> " + String(describing: node)
         }
     }
     
@@ -122,7 +98,7 @@ class BinarySearchTree<T> where T : Comparable {
         while let node = tranversingNode {
             if node.data == value {
                 itemFound = true
-                print("Item found")
+                print("\(value) found")
                 break
             }
             else if node.data > value {
@@ -197,7 +173,7 @@ class Queue<T> {
     }
 }
 
-var tree = Tree<Int>()
+var tree = BinarySearchTree<Int>()
 tree.append(25)
 tree.append(15)
 tree.append(50)
@@ -205,9 +181,11 @@ tree.append(10)
 tree.append(22)
 tree.append(35)
 tree.append(70)
-tree.append(4)
+tree.append(23)
 tree.append(12)
-tree.append(18)
+tree.append(13)
+tree.append(11)
+tree.append(14)
 tree.append(24)
 tree.append(31)
 tree.append(44)
@@ -215,17 +193,21 @@ tree.append(66)
 tree.append(90)
 
 print("breathFirstTraversalByQueue Result: "+tree.breathFirstTraversalByQueue())
+
 var depthFirstResult = ""
 tree.depthFirstTravesal(node: nil, result: &depthFirstResult)
 print("DepthFirstTravesal Result: "+depthFirstResult)
 
-var breathFirstResult = ""
-tree.breathFirstTraversalByRecusrion(node: nil, result: &breathFirstResult)
-print("breathFirstTraversalByRecusrion Result: "+breathFirstResult)
-
 tree.search(value: 15)
+
+var preOrderResult = ""
+tree.preOrderTraversal(result: &preOrderResult)
+print("preOrderTraversal Result: " + preOrderResult)
 
 var inOrderResult = ""
 tree.inOrderTraversal(node: nil, result: &inOrderResult)
-print("DepthFirstTravesal Result: "+inOrderResult)
+print("inOrderTraversal Result: "+inOrderResult)
 
+var postOrderResult = ""
+tree.postOrderTraversal(result: &postOrderResult)
+print("postOrderTraversal Result: "+postOrderResult)
