@@ -151,6 +151,72 @@ class BinarySearchTree<T> where T : Comparable {
             result += " -> " + String(describing: tranversingNode)
         }
     }
+    
+    func removeItem(value: T) {
+        var current = root
+        var previous = root
+        while let currentData = current, (currentData.left != nil || currentData.right != nil) {
+            if currentData.data > value {
+                previous = current
+                current = current?.left
+            }
+            else if currentData.data < value {
+                previous = current
+                current = current?.right
+            }
+            
+            if current?.data == value {
+                //If there is no left and right child of deleting node
+                if current?.left == nil && current?.right == nil {
+                    if previous?.right?.data == value {
+                        previous?.right = nil
+                    }
+                    else if previous?.left?.data == value {
+                        previous?.left = nil
+                    }
+                }
+                //deleting node has either left or right child
+                else if current?.left == nil || current?.right == nil {
+                    let childNode = current?.left == nil ? current?.right : current?.left
+                    if previous?.right?.data == value {
+                        previous?.right = childNode
+                    }
+                    else if previous?.left?.data == value {
+                        previous?.left = childNode
+                    }
+                }
+                //deleting node has both right and left child
+                else {
+                    //find left most(smallest) element in right sub tree
+                    let rightRootNode = current?.right
+                    var parentLeftNode = rightRootNode
+                    var smallestRightNode = rightRootNode
+                    while smallestRightNode?.left != nil {
+                        parentLeftNode = smallestRightNode
+                        smallestRightNode = smallestRightNode?.left
+                    }
+                    //add the smallest node at the place of current node
+                    if previous?.right?.data == value {
+                        previous?.right = smallestRightNode
+                    }
+                    else if previous?.left?.data == value {
+                        previous?.left = smallestRightNode
+                    }
+                    //Delete smallest node from end
+                    if smallestRightNode?.data != parentLeftNode?.data {
+                        parentLeftNode?.left = nil
+                    }
+                    //Add children of current node back
+                    if smallestRightNode?.data != current?.right?.data {
+                        smallestRightNode?.right = current?.right
+                    }
+                    smallestRightNode?.left = current?.left
+                }
+                
+                return
+            }
+        }
+    }
 }
 
 class Queue<T> {
@@ -176,9 +242,8 @@ class Queue<T> {
 var tree = BinarySearchTree<Int>()
 tree.append(25)
 tree.append(15)
-tree.append(50)
 tree.append(10)
-tree.append(22)
+tree.append(50)
 tree.append(35)
 tree.append(70)
 tree.append(23)
@@ -211,3 +276,6 @@ print("inOrderTraversal Result: "+inOrderResult)
 var postOrderResult = ""
 tree.postOrderTraversal(result: &postOrderResult)
 print("postOrderTraversal Result: "+postOrderResult)
+
+tree.removeItem(value: 20)
+print("breathFirstTraversalByQueue Result: "+tree.breathFirstTraversalByQueue())
