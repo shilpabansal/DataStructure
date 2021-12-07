@@ -31,41 +31,21 @@ class PossibleIPAddresses {
         var validIPAddress = [String]()
         let firstStartIndex = 0
         for firstStringLength in 0..<3 {
-            var firstString: String?
-            var secondString: String?
-            var thirdString: String?
-            if let first = isValid(inputString, firstStartIndex, firstStartIndex + firstStringLength) {
-                firstString = first
+            let secondStartIndex = firstStartIndex + firstStringLength + 1
+            
+            for secondStringLength in secondStartIndex..<secondStartIndex+3 {
+                let thirdStartIndex =  secondStringLength + 1
                 
-                let secondStartIndex = firstStartIndex + firstStringLength + 1
-                for secondStringLength in 0..<3 {
-                    if let second = isValid(inputString, secondStartIndex, secondStartIndex + secondStringLength) {
-                        secondString = second
-                    }
-                    else {
-                        secondString = nil
-                    }
+                for thirdStringLength in thirdStartIndex..<thirdStartIndex+3 {
+                    let fourthStartIndex = thirdStringLength + 1
                     
-                    let thirdStartIndex = secondStartIndex + secondStringLength + 1
-                    for thirdStringLength in 0..<3 {
-                        if let third = isValid(inputString, thirdStartIndex, thirdStartIndex + thirdStringLength) {
-                            thirdString = third
-                        }
-                        else {
-                            thirdString = nil
-                        }
-                        
-                        let fourthStartIndex = thirdStartIndex + thirdStringLength + 1
-                        if fourthStartIndex > inputString.count {
-                            break
-                        }
-                        
-                        if let fourthString = isValid(inputString, fourthStartIndex, inputString.count-1),
-                           let firstString = firstString,
-                              let secondString = secondString,
-                              let thirdString = thirdString {
-                                validIPAddress.append("\(firstString).\(secondString).\(thirdString).\(fourthString)")
-                        }
+               if let first = isValid(inputString, firstStartIndex, firstStartIndex + firstStringLength),
+                  let second = isValid(inputString, secondStartIndex, secondStringLength),
+                  let third = isValid(inputString, thirdStartIndex, thirdStringLength),
+                  
+                  fourthStartIndex < inputString.count,
+                  let fourth = isValid(inputString, fourthStartIndex, inputString.count-1) {
+                    validIPAddress.append("\(first).\(second).\(third).\(fourth)")
                     }
                 }
             }
