@@ -36,6 +36,19 @@ enum BinaryTree<T> where T: Comparable {
             return .node(left, value, right.inserting(element))
         }
     }
+    
+    func nodeHeight() -> Int {
+        switch self {
+        case .empty:
+            return 0
+        case let .node(left, _, right):
+            let depth = (left.nodeHeight() > right.nodeHeight() ? left.nodeHeight() : right.nodeHeight())
+            if case .empty = left, case .empty = right {
+                return 0
+            }
+            return depth + 1
+        }
+    }
 }
 
 extension BinaryTree: CustomStringConvertible {
@@ -59,4 +72,10 @@ let node3 = BinaryTree.node(.empty, 3, node4)
 var root = BinaryTree.node(node1, 2, node3)
 
 root.insert(5)
+root.insert(6)
+root.insert(6)
 print(root)
+
+print("numberOfNodes: \(root.numberOfNodes())")
+print("root's nodeHeight: \(root.nodeHeight())")
+
